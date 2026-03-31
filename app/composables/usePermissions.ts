@@ -1,6 +1,7 @@
 import type { BetterAuthRole, Resource, Action } from '~/types/auth'
+import { PARTNER_ROLES } from '~/types/auth'
 
-const PERMISSIONS: Record<BetterAuthRole, Partial<Record<Resource, Action[]>>> = {
+export const PERMISSIONS: Record<BetterAuthRole, Partial<Record<Resource, Action[]>>> = {
   super_admin: {
     dashboard: ['view', 'create', 'edit', 'assign'],
     job: ['view', 'create', 'edit', 'assign', 'reschedule', 'reassign', 'delete'],
@@ -75,7 +76,7 @@ export function usePermissions() {
   }
 
   function isPartner(): boolean {
-    return isRole('partner_manager', 'partner_technician')
+    return isRole(...PARTNER_ROLES)
   }
 
   return { can, canAny, isRole, isPanel, isPartner, role }

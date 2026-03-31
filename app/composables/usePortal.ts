@@ -1,6 +1,5 @@
 import type { PortalType, BetterAuthRole } from '~/types/auth'
-
-const PARTNER_ROLES: BetterAuthRole[] = ['partner_manager', 'partner_technician']
+import { PARTNER_ROLES } from '~/types/auth'
 
 export function usePortal() {
   const { user } = useUserSession()

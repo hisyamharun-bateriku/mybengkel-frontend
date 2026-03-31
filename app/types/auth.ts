@@ -8,6 +8,8 @@ export type BetterAuthRole =
 
 export type PortalType = 'panel' | 'partner'
 
+export const PARTNER_ROLES: BetterAuthRole[] = ['partner_manager', 'partner_technician']
+
 export type Resource =
   | 'dashboard'
   | 'job'
