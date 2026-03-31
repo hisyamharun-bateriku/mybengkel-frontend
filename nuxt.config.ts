@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   future: { compatibilityVersion: 4 },
 
   modules: [
+    '@nuxtjs/tailwindcss',
     '@onmax/nuxt-better-auth',
     '@pinia/nuxt',
   ],
