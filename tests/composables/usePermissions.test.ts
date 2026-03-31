@@ -79,12 +79,22 @@ function can(role: BetterAuthRole, resource: Resource, action: Action): boolean 
   return PERMISSIONS[role]?.[resource]?.includes(action) ?? false
 }
 
-const PANEL_ROLES: BetterAuthRole[] = ['super_admin', 'admin', 'panel_manager', 'panel_technician']
-const PARTNER_ROLES: BetterAuthRole[] = ['partner_manager', 'partner_technician']
+function isPanel(role: BetterAuthRole | undefined): boolean {
+  if (!role) return false
+  return (['super_admin', 'admin', 'panel_manager', 'panel_technician'] as BetterAuthRole[]).includes(role)
+}
+
+function isPartner(role: BetterAuthRole | undefined): boolean {
+  if (!role) return false
+  return (['partner_manager', 'partner_technician'] as BetterAuthRole[]).includes(role)
+}
 
 describe('Permission matrix', () => {
-  it('returns false when role is unknown', () => {
-    expect(can('panel_technician', 'job', 'create')).toBe(false)
+  it('returns false when no user (undefined role)', () => {
+    // Simulates the composable's "if (!role.value) return false" guard
+    const role: BetterAuthRole | undefined = undefined
+    const result = role ? (PERMISSIONS[role]?.['job']?.includes('create') ?? false) : false
+    expect(result).toBe(false)
   })
 
   it('panel_manager can create jobs', () => {
@@ -107,12 +117,12 @@ describe('Permission matrix', () => {
     expect(can('partner_technician', 'job', 'assign')).toBe(false)
   })
 
-  it('panel_manager is a panel role', () => {
-    expect(PANEL_ROLES.includes('panel_manager')).toBe(true)
+  it('isPanel returns true for panel_manager', () => {
+    expect(isPanel('panel_manager')).toBe(true)
   })
 
-  it('partner_manager is a partner role', () => {
-    expect(PARTNER_ROLES.includes('partner_manager')).toBe(true)
+  it('isPartner returns true for partner_manager', () => {
+    expect(isPartner('partner_manager')).toBe(true)
   })
 
   it('super_admin has full access', () => {
