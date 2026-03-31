@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 import type { BetterAuthRole, PortalType } from '~/types/auth'
+
+const PANEL_ROLES: BetterAuthRole[] = ['super_admin', 'admin', 'panel_manager', 'panel_technician']
+const PARTNER_ROLES: BetterAuthRole[] = ['partner_manager', 'partner_technician']
 
 export const useAuthStore = defineStore('auth', () => {
   const portalType = ref<PortalType | null>(null)
-
-  const PANEL_ROLES: BetterAuthRole[] = ['super_admin', 'admin', 'panel_manager', 'panel_technician']
-  const PARTNER_ROLES: BetterAuthRole[] = ['partner_manager', 'partner_technician']
 
   function resolvePortal(role: BetterAuthRole): PortalType {
     if (PARTNER_ROLES.includes(role)) return 'partner'
@@ -20,5 +21,5 @@ export const useAuthStore = defineStore('auth', () => {
     portalType.value = null
   }
 
-  return { portalType, PANEL_ROLES, PARTNER_ROLES, resolvePortal, setPortalFromRole, clear }
+  return { portalType, resolvePortal, setPortalFromRole, clear }
 })
