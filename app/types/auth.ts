@@ -35,17 +35,3 @@ export type Action =
   | 'ban'
   | 'export'
 
-// Augment Better Auth user with backend additional fields
-declare module '#nuxt-better-auth' {
-  interface AuthUser {
-    firstName: string
-    lastName: string
-    phone?: string
-    role: BetterAuthRole
-    status: string
-    baOrganizationId?: string
-    staffId?: string
-    avatar?: string
-    mfaEnabled: boolean
-  }
-}

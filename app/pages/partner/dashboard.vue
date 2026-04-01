@@ -8,11 +8,11 @@ const recentJobs = ref<{ id: string; jobNumber: string; vehicle: string; status:
 onMounted(async () => {
   try {
     const [statsRes, jobsRes] = await Promise.all([
-      $api('/api/v1/dashboard/stats'),
-      $api('/api/v1/jobs?limit=5&sort=createdAt:desc'),
+      $api<{ success: boolean; data: typeof stats.value }>('/api/v1/dashboard/stats'),
+      $api<{ success: boolean; data: { data: typeof recentJobs.value } }>('/api/v1/jobs'),
     ])
-    stats.value = statsRes as typeof stats.value
-    recentJobs.value = (jobsRes as { data: typeof recentJobs.value }).data
+    stats.value = statsRes.data
+    recentJobs.value = jobsRes.data.data
   } catch {}
 })
 </script>

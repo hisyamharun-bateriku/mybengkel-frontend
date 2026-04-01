@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'auth', auth: 'guest' })
 
-const { signIn, client } = useUserSession()
+const { login, setSession } = useUserSession()
 const { dashboardPath } = usePortal()
 
 const form = reactive({ email: '', password: '' })
@@ -14,21 +14,33 @@ async function handleLogin() {
   loading.value = true
   error.value = ''
   try {
-    await signIn.email(
-      { email: form.email, password: form.password },
-      {
-        onSuccess: () => navigateTo(dashboardPath.value),
-        onError: (ctx: { error: { status?: number; message?: string } }) => {
-          if (ctx.error.status === 302 || ctx.error.message?.includes('two_factor')) {
-            mfaStep.value = true
-          } else {
-            error.value = ctx.error.message ?? 'Invalid credentials'
-          }
-        },
-      },
-    )
-  } catch {
-    error.value = 'An unexpected error occurred'
+    const res = await login(form.email, form.password)
+
+    if (res.data.mfaRequired) {
+      mfaStep.value = true
+      loading.value = false
+      return
+    }
+
+    const u = res.data.user
+    setSession(res.data.accessToken, {
+      id: u.id,
+      email: u.email,
+      name: u.name,
+      firstName: u.firstName,
+      lastName: u.lastName,
+      phone: u.phoneNumber,
+      role: u.role.toLowerCase(),
+      status: 'active',
+      baOrganizationId: u.orgId,
+      staffId: u.staffId,
+      mfaEnabled: u.mfaEnabled,
+    })
+
+    navigateTo(u.redirectUrl ?? dashboardPath.value)
+  } catch (e: unknown) {
+    const msg = (e as { data?: { error?: { message?: string } } })?.data?.error?.message
+    error.value = msg ?? 'Invalid credentials'
   }
   loading.value = false
 }
@@ -37,7 +49,11 @@ async function handleOtpVerify() {
   loading.value = true
   error.value = ''
   try {
-    await client?.twoFactor.verifyOtp({ code: otp.value })
+    const config = useRuntimeConfig()
+    await $fetch(`${config.public.apiBase}/api/v1/auth/verify-otp`, {
+      method: 'POST',
+      body: { email: form.email, code: otp.value },
+    })
     navigateTo(dashboardPath.value)
   } catch (e: unknown) {
     error.value = (e as { message?: string })?.message ?? 'Invalid OTP'

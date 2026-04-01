@@ -43,7 +43,7 @@ watch(statusFilter, fetchJobs)
             <TableCell>{{ job.vehicle }}</TableCell>
             <TableCell>
               <div class="flex gap-1 flex-wrap">
-                <Badge v-for="s in job.services.slice(0,2)" :key="s" variant="secondary" class="text-xs">{{ s }}</Badge>
+                <Badge v-for="s in (job.services ?? []).slice(0,2)" :key="s" variant="secondary" class="text-xs">{{ s }}</Badge>
               </div>
             </TableCell>
             <TableCell><Badge variant="outline">{{ job.status }}</Badge></TableCell>

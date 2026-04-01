@@ -8,6 +8,7 @@ const { signOut } = useUserSession()
 async function handleLogout() {
   await signOut({ redirect: '/login' })
 }
+
 </script>
 
 <template>

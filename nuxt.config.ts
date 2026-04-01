@@ -1,20 +1,12 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   future: { compatibilityVersion: 4 },
+  devServer: { port: 3001 },
 
   modules: [
     '@nuxtjs/tailwindcss',
-    '@onmax/nuxt-better-auth',
     '@pinia/nuxt',
   ],
-
-  auth: {
-    clientOnly: true,
-    redirects: {
-      login: '/login',
-      guest: '/panel/dashboard',
-    },
-  },
 
   routeRules: {
     '/':                  { redirect: '/login' },
@@ -31,6 +23,10 @@ export default defineNuxtConfig({
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? 'http://localhost:3000',
     },
   },
+
+  components: [
+    { path: '~/components', pathPrefix: false, extensions: ['.vue'] },
+  ],
 
   css: ['~/assets/css/main.css'],
 

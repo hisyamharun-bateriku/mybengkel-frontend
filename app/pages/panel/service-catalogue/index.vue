@@ -14,9 +14,9 @@ async function fetchServices() {
     const params = new URLSearchParams({ page: String(pagination.value.page), limit: String(pagination.value.limit) })
     if (categoryFilter.value) params.set('category', categoryFilter.value)
     if (search.value) params.set('search', search.value)
-    const res = await $api(`/api/v1/service-catalog?${params}`) as { data: typeof services.value; meta: { total: number } }
-    services.value = res.data
-    pagination.value.total = res.meta.total
+    const res = await $api(`/api/v1/services?${params}`) as { success: boolean; data: { data: typeof services.value; meta: { total: number } } }
+    services.value = res.data.data
+    pagination.value.total = res.data.meta.total
   } catch {}
 }
 
@@ -58,7 +58,7 @@ watch(search, () => {
           </div>
           <NuxtLink :to="`/panel/service-catalogue/${s.id}`" class="font-semibold text-[var(--color-primary)] hover:underline block">{{ s.name }}</NuxtLink>
           <p v-if="s.vehicleBrand" class="text-sm text-[var(--color-text-muted)] mt-1">{{ s.vehicleBrand }}</p>
-          <p class="font-bold mt-2">RM {{ s.price.toFixed(2) }}</p>
+          <p class="font-bold mt-2">RM {{ (s.price ?? 0).toFixed(2) }}</p>
         </Card>
       </div>
     </Card>
