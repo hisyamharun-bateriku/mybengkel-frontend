@@ -5,7 +5,7 @@ const $api = useApi()
 
 const stats = ref({ totalBookings: 0, myInProgressJobs: 0, availableBays: 0, totalCustomers: 0 })
 const bays = ref<{ id: string; name: string; status: string; vehicleReg?: string }[]>([])
-const recentJobs = ref<{ id: string; jobNumber: string; customerName: string; vehicleDetails: string; status: string }[]>([])
+const recentJobs = ref<{ id: string; jobNumber: string; customerName: string; vehicle: { make?: string; model?: string; registration?: string }; status: string }[]>([])
 
 onMounted(async () => {
   try {
@@ -98,7 +98,7 @@ onMounted(async () => {
               <NuxtLink :to="`/panel/jobs/${job.id}`" class="text-[var(--color-primary)] hover:underline font-medium">{{ job.jobNumber }}</NuxtLink>
             </TableCell>
             <TableCell>{{ job.customerName }}</TableCell>
-            <TableCell>{{ job.vehicleDetails }}</TableCell>
+            <TableCell>{{ job.vehicle?.make }} {{ job.vehicle?.model }} · {{ job.vehicle?.registration }}</TableCell>
             <TableCell><Badge variant="outline">{{ job.status }}</Badge></TableCell>
           </TableRow>
         </TableBody>

@@ -3,7 +3,7 @@ definePageMeta({ layout: 'partner' })
 
 const $api = useApi()
 const stats = ref({ totalAssigned: 0, inProgress: 0, completed: 0 })
-const recentJobs = ref<{ id: string; jobNumber: string; vehicle: string; status: string }[]>([])
+const recentJobs = ref<{ id: string; jobNumber: string; vehicle: { make?: string; model?: string; registration?: string; year?: number }; status: string }[]>([])
 
 onMounted(async () => {
   try {
@@ -55,7 +55,7 @@ onMounted(async () => {
             <TableCell>
               <NuxtLink :to="`/partner/jobs/${job.id}`" class="text-[var(--color-primary)] hover:underline font-medium">{{ job.jobNumber }}</NuxtLink>
             </TableCell>
-            <TableCell>{{ job.vehicle }}</TableCell>
+            <TableCell>{{ job.vehicle?.make }} {{ job.vehicle?.model }} · {{ job.vehicle?.registration }}</TableCell>
             <TableCell><Badge variant="outline">{{ job.status }}</Badge></TableCell>
           </TableRow>
         </TableBody>
